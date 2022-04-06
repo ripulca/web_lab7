@@ -14,27 +14,34 @@ use Symfony\Component\Routing\Annotation\Route;
 class MainController extends AbstractController
 {
     #[Route('/', name: 'app_index', methods: ['GET'])]
-    public function index(PhotoRepository $photoRepository): Response
+    public function index(PhotoRepository $photoRepository, $page=1): Response
     {
         $photos=$photoRepository->getAllPhotos();
-        $pages=$photos->getIterator()->count();
+        $totalPhotosReturned = $photos->getIterator()->count();
+        $totalPhotos = $photos->count();
+        $iterator = $photos->getIterator();
+        $maxPages = ceil($totalPhotos / $totalPhotosReturned);
+        // $pages=$photos->getIterator()->count();
         return $this->render('index.html.twig', [
             'photos' => $photos,
-            'pages' => $pages
+            'maxPages' => $maxPages,
+            'thisPage'=>$page
         ]);
     }
 
-    #[Route('/{page}', name: 'app_pages_index', methods: ['GET'])]
+    #[Route('/{page}', name: 'app_pages_index', requirements: ['page' => '\d+'], methods: ['GET'])]
     public function indexPage(PhotoRepository $photoRepository, $page = 1): Response
     {
         $photos=$photoRepository->getAllPhotos($page);
-        $pages = $photos->getIterator()->count();
-        // $totalPhotos = $photos->count();
-        // $iterator = $photos->getIterator();
+        $totalPhotosReturned = $photos->getIterator()->count();
+        $totalPhotos = $photos->count();
+        $iterator = $photos->getIterator();
+        $maxPages = ceil($totalPhotos / $totalPhotosReturned);
         
         return $this->render('index.html.twig', [
             'photos' => $photoRepository->findAll(),
-            'pages' => $pages
+            'maxPages' => $maxPages,
+            'thisPage'=>$page
         ]);
     }
 }

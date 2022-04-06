@@ -59,7 +59,7 @@ class PhotoRepository extends ServiceEntityRepository
 }
 
     
-    public function paginate($dql, $page = 1, $limit = 9)
+    public function paginate($dql, $page = 1, $limit = 8)
     {
         $paginator = new Paginator($dql);
 

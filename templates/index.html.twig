@@ -20,9 +20,26 @@
             </div> 
         </div>
         <a href="{{ path('app_photo_new') }}" class="text-center p-3 mx-auto link-secondary">Create new</a>
-        {% for i in pages %}
-            <a href="{{ path('app_pages_index', {'page': i}) }}" class="text-center p-3 mx-auto link-secondary"> {{i}} </a>
-        {% endfor %}
+        {% if maxPages > 1 %}
+        <ul class="pagination pagination-sm">
+            {# `«` arrow  #}
+            <li {{ thisPage == 1 ? 'class="disabled"' }}>
+                <a href="{{ path('app_pages_index', {page: thisPage-1 < 1 ? 1 : thisPage-1}) }}" class="text-center p-3 mx-auto link-secondary">«</a>
+            </li>
+
+            {# Render each page number #}
+            {% for i in 1..maxPages %}
+            <li {{ thisPage == i ? 'class="active"' }}>
+            <a href="{{ path('app_pages_index', {page: i}) }}" class="text-center p-3 mx-auto link-secondary">{{ i }}</a>
+            </li>
+            {% endfor %}
+
+            {# `»` arrow #}
+            <li {{ thisPage == maxPages ? 'class="disabled"' }}>
+                <a href="{{ path('app_pages_index', {page: thisPage+1 <= maxPages ? thisPage+1 : thisPage}) }}" class="text-center p-3 mx-auto link-secondary">»</a>
+            </li>
+        </ul>
+        {% endif %}
     </div>    
 
 {% endblock %}
